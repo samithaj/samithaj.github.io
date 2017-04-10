@@ -2,6 +2,8 @@
 <html lang="en">
 
   <head>
+   <link rel="stylesheet" type="text/css" href="http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css" />
+ <script type="text/javascript" src="http://jsxgraph.uni-bayreuth.de/distrib/jsxgraphcore.js"></script>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -67,6 +69,38 @@
     <p>Vanishing gradient problem depends on the choice of the activation function. Many common activation functions (e.g sigmoid or tanh) ‘squash’ their input into a very small output range in a very non-linear fashion. For example, sigmoid maps the real number line onto a “small” range of [0, 1]. As a result, there are large regions of the input space which are mapped to an extremely small range. In these regions of the input space, even a large change in the input will produce a small change in the output — hence the gradient is small.
 This becomes much worse when we stack multiple layers of such non-linearities on top of each other. For instance, first layer will map a large input region to a smaller output region, which will be mapped to an even smaller region by the second layer, which will be mapped to an even smaller region by the third layer and so on. As a result, even a large change in the parameters of the first layer doesn’t change the output much.
 We can avoid this problem by using activation functions which don’t have this property of ‘squashing’ the input space into a small region. A popular choice is Rectified Linear Unit which maps xx to max(0,x)max(0,x).</p>
+
+<div id="box" class="jxgbox" style="width:500px; height:500px;"></div>
+<script type="text/javascript">
+var board = JXG.JSXGraph.initBoard('box', {boundingbox: [-6, 6, 6, -4], axis: true});
+ board.suspendUpdate();
+
+ var f = function(x) {
+       if (x<1) {
+          return 0.5*x*x;
+       } else {
+         return x+1;
+       }
+      };
+ var graph = board.create('functiongraph', [f], {strokeColor:'#00ff00'});
+
+ var s = board.create('slider', [[0,-1],[4,-1],[0,1,1]],{name:'&epsilon;'});
+
+ var x1 = board.create('glider', [-2,0,board.defaultAxes.x],{name:'a'});
+ board.suspendUpdate();
+ var x2 = board.create('point', [function(){return x1.X()-s.Value();},0],{size:2,face:'[]',name:' '});
+ var x3 = board.create('point', [function(){return x1.X()+s.Value();},0],{size:2,face:'[]',name:' '});
+ var y1 = board.create('point', [function(){return x1.X();},function(){return f(x1.X());}],{size:2,face:'[]',name:'f(a)'});
+ var y2 = board.create('point', [function(){return x2.X();},function(){return f(x2.X());}],{size:2,face:'[]',name:' '});
+ var y3 = board.create('point', [function(){return x3.X();},function(){return f(x3.X());}],{size:2,face:'[]',name:' '});
+ var v1 = board.create('segment', [x1,y1],{strokeColor:'gray',dash:2,strokeWidth:1});
+ var v2 = board.create('line', [x2,y2],{strokeColor:'gray',dash:2,strokeWidth:1});
+ var v3 = board.create('line', [x3,y3],{strokeColor:'gray',dash:2,strokeWidth:1});
+
+ var h1 = board.create('curve', [function(t){return t},function(t){return y1.Y();}], {strokeColor:'gray',dash:2,strokeWidth:1});
+ var h2 = board.create('curve', [function(t){return t},function(t){return y2.Y();}], {strokeColor:'gray',dash:2,strokeWidth:1});
+ var h3 = board.create('curve', [function(t){return t},function(t){return y3.Y();}], {strokeColor:'gray',dash:2,strokeWidth:1});
+ board.unsuspendUpdate();</script>
 
 <p>Jekyll also offers powerful support for code snippets:</p>
 
